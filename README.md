@@ -42,7 +42,7 @@ To grep with your project as base directory, you could add something like:
 
     nnoremap <Leader>g :ProjectRootExe grep<space>
 
-### Open file relative to prjroot
+### Open file relative to the root
 To start the command line with `:e /my/path/to/project/`, you could use this:
 
     fun! EditProjectDir()
@@ -83,9 +83,9 @@ didn't install both plugins):
 
 Similar projects
 ----------------
-  * (Vim Rooter)[https://github.com/airblade/vim-rooter]: Changes the working
+  * [Vim Rooter](https://github.com/airblade/vim-rooter): Changes the working
     directory to the project root when you open a file.
-  * (vimprj)[https://github.com/vim-scripts/vimprj]: Allows the execution of
+  * [vimprj](https://github.com/vim-scripts/vimprj): Allows the execution of
     project or folder specific scripts.
-  * (CtrlP)[https://github.com/kien/ctrlp.vim]: Has an option to search
+  * [CtrlP](https://github.com/kien/ctrlp.vim): Has an option to search
     for files relative to the root directory of your project.
