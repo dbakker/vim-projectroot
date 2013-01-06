@@ -63,7 +63,7 @@ fun! ProjectRootBuffers(...)
   let bufs = []
   for b in s:getallbuffers()
     let file = bufname(b)
-    let file = fnamemodify(b, ':p')
+    let file = fnamemodify(file, ':p')
     if stridx(file, root)==0
       call add(bufs, file)
     endif
