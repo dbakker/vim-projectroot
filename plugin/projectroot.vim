@@ -1,3 +1,8 @@
+" projectroot.vim - automatic guessing of projectroots
+" Maintainer: Daan O. Bakker
+" Version:    1.0
+" License:    The same license as Vim itself, see `:h license`
+
 if &cp || exists('loaded_projectroot')
   finish
 endif
