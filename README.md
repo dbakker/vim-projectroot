@@ -23,26 +23,51 @@ them (eg. `nnoremap ]p :ProjectBufNext<cr>`).
 
 In the list below `[file]` is optional, and defaults to the current file.
 
-  * `:ProjectRootCD [file]`: Changes the directory to the project root of the
-    given file (current file if none is given)
-  * `:ProjectRootExe {cmd}`: Executes the given command with the current
-    directory set to the project root of the given file. The current directory
-    is restored after executing this command.
-  * `:ProjectBufNext[!] [file]`: Switch to the next project buffer. The `!` can
-    be provided and has the same effect as the `:bnext!` command. *Note*: By
-    default, if the next buffer would already be visible in another window, it
-    is skipped. If you don't want this behaviour use
-    `let g:projectroot_noskipbufs = 1`.
-  * `:ProjectBufPrev[!] [file]`: Switch to the previous project buffer.
-  * `:ProjectBufFirst[!] [file]`: Switch to the first project buffer.
-  * `:ProjectBufLast[!] [file]`: Switch to the last project buffer.
-  * `:ProjectBufArgs [file]`: Set the `arglist` equal to a list of the project
-    buffers. This might be useful to combine with built-in commands that do
-    something with the argument list such as `argadd` and `next`. For a full
-    list try `:help arglist`.
-  * `:ProjectBufDo[!] {cmd}`: Similar to `bufdo`, but execute the given command
-    on each project buffer. Similar to
-    `:ProjectBufFirst:{cmd}:ProjectBufNext:{cmd}` etcetera.
+<table>
+  <tr>
+    <th>Command</th><th>Description</th>
+  <tr>
+    <td>:ProjectRootCD&nbsp;[file]</td>
+    <td>Changes the directory to the project root of the given file (current
+    file if none is given)</td>
+  </tr>
+  <tr>
+    <td>:ProjectRootExe&nbsp;{cmd}</td>
+    <td>Executes the given command with the current directory set to the project
+    root of the given file. The current directory is restored after executing
+    this command.</td>
+  </tr>
+  <tr>
+    <td>:ProjectBufNext[!]&nbsp;[file]</td>
+    <td>Switch to the next project buffer. The `!` can be provided and has the
+    same effect as the `:bnext!` command.<br/><b>Note</b>: By default, if the next buffer
+    would already be visible in another window, it is skipped. If you don't want
+    this behaviour use `let g:projectroot_noskipbufs = 1`.</td>
+  <tr>
+    <td>:ProjectBufPrev[!]&nbsp;[file]</td>
+    <td>Switch to the previous project buffer.</td>
+  </tr>
+  <tr>
+    <td>:ProjectBufFirst[!]&nbsp;[file]</td>
+    <td>Switch to the first project buffer.</td>
+  </tr>
+  <tr>
+    <td>:ProjectBufLast[!]&nbsp;[file]</td>
+    <td>Switch to the last project buffer.</td>
+  </tr>
+  <tr>
+    <td>:ProjectBufArgs&nbsp;[file]</td>
+    <td>Set the `arglist` equal to a list of the project buffers. This might be
+    useful to combine with built-in commands that do something with the argument
+    list such as `argadd` and `next`. For a full list try `:help arglist`.</td>
+  </tr>
+  <tr>
+    <td>:ProjectBufDo[!]&nbsp;{cmd}</td>
+    <td>Similar to `bufdo`, but execute the given command on each project
+    buffer. Similar to `:ProjectBufFirst:{cmd}:ProjectBufNext:{cmd}` etcetera.
+    </td>
+  </tr>
+</table>
 
 Note: Instead of giving a file, it is also possible to give a mark, for example:
 `:ProjectBufNext 'F` would use the file pointed to by the `F` mark to determine
@@ -52,17 +77,34 @@ Methods provided
 ----------------
 You could use the following methods in your own Vimscripts:
 
-  * `ProjectRootGuess([file])`: Returns the project root for the given file
-    (or for the current file if none is given).
-  * `ProjectRootExe(cmd)`: Temporarily changes the current directory to that
-    of the project root, then executes the command.
-  * `ProjectRootCD([file])`: Changes the current directory to project root of
-    the given file.
-  * `ProjectRootBuffers([file])`: Returns all buffers belonging to the same
-    project of the given file.
-  * `ProjectBufNext(count, [file])`: Return the filename of the next project
-    buffer. The `count` parameter specifies how many entries to go up or down
-    the project buffer list, wrapping around at the start or end.
+<table>
+  <tr> <th>Method</th> <th>Description</th> </tr>
+  <tr>
+    <td>ProjectRootGuess([file])</td>
+    <td>Returns the project root for the given file (or for the current file if
+    none is given).</td>
+  </tr>
+  <tr>
+    <td>ProjectRootExe(cmd)</td>
+    <td>Temporarily changes the current directory to that of the project root,
+    then executes the command.</td>
+  </tr>
+  <tr>
+    <td>ProjectRootCD([file])</td>
+    <td>Changes the current directory to project root of the given file.</td>
+  </tr>
+  <tr>
+    <td>ProjectRootBuffers([file])</td>
+    <td>Returns all buffers belonging to the same project of the given
+    file.</td>
+  </tr>
+  <tr>
+    <td>ProjectBufNext(count,&nbsp;[file])</td>
+    <td>Return the filename of the next project buffer. The `count` parameter
+    specifies how many entries to go up or down the project buffer list,
+    wrapping around at the start or end.</td>
+  </tr>
+</table>
 
 Examples
 --------
