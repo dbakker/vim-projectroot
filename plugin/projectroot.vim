@@ -60,16 +60,9 @@ command! -nargs=* -complete=command ProjectRootExe :call ProjectRootExe([<f-args
 " ProjectBuffers([file]): returns all buffers from the same project {{{1
 fun! ProjectBuffers(...)
   let root = ProjectRootGuess(s:getfullname(a:0 ? a:1 : ''))
-  let bufs = []
-  for b in s:getallbuffers()
-    let file = bufname(b)
-    let file = fnamemodify(file, ':p')
-    if stridx(file, root)==0
-      call add(bufs, file)
-    endif
-  endfor
-  call sort(bufs)
-  return bufs
+  let bufs = map(s:getallbuffers(), 'fnamemodify(bufname(v:val),":p")')
+  let bufs = filter(bufs, 'stridx(v:val,root)==0 && filereadable(v:val)')
+  return sort(bufs)
 endf
 
 command! -nargs=? -complete=file ProjectBufArgs :exe 'args' join(ProjectBuffers("<args>"))
@@ -94,17 +87,13 @@ endf
 
 command! -nargs=* -bang -complete=command ProjectBufDo :call <SID>ProjectBufDo([<f-args>], '<bang>')
 
-" ProjectBufNext([count], [file]): returns the next buffer in the project {{{1
+" ProjectBufNext(count, [file]): returns the next buffer in the project {{{1
 fun! ProjectBufNext(count, ...)
   let thisbuf = s:getfullname(a:0 ? a:1 : '')
   let l = ProjectBuffers(thisbuf)
 
   if !exists('g:projectroot_noskipbufs')
-    for i in copy(l)
-      if bufwinnr(i)!=-1 && i!=thisbuf
-        call remove(l, index(l, i))
-      endif
-    endfor
+    let l=filter(l, 'bufwinnr(v:val)==-1 || v:val==thisbuf')
   endif
 
   let i = index(l, thisbuf)
@@ -119,14 +108,10 @@ command! -nargs=? -bang -complete=file ProjectBufPrev :exe 'b<bang>' ProjectBufN
 
 " Utility methods {{{1
 fun! s:getallbuffers()
-  let all = range(1, bufnr('$'))
-  let res = []
-  for b in all
-    if buflisted(b)
-      call add(res, bufname(b))
-    endif
-  endfor
-  return res
+  redir => m
+  sil exe ':ls'
+  redir END
+  return map(split(m,'\n'), 'matchstr(v:val,''\v\d+'')*1')
 endf
 
 fun! s:getfullname(f)
@@ -138,13 +123,10 @@ endf
 
 fun! s:getmarkfile(mark)
   try
-    let message=''
-    redir => message
+    redir => m
     sil exe ':marks' a:mark
     redir END
-    let lines=split(message, '\n')
-    let lastline=split(lines[len(lines)-1])
-    let f = expand(lastline[len(lastline)-1])
+    let f = split(split(m,'\n')[-1])[-1]
     return filereadable(f) ? f : ''
   catch
     return ''
