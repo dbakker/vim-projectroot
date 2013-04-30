@@ -1,0 +1,221 @@
+*projectroot.txt*	For Vim version 7.3	Last change: 2013 April 30
+
+
+		  PROJECTROOT PLUGIN DOCUMENTATION
+
+
+Author: Daan Bakker <info@dbakker.com>
+License: Same terms as Vim itself (see |license|)
+
+1. Introduction	    |projectroot-intro|
+2. Examples	    |projectroot-examples|
+3. Commands	    |projectroot-commands|
+4. Methods	    |projectroot-methods|
+5. Customizing	    |projectroot-customizing|
+6. Extending	    |projectroot-extending|
+7. About	    |projectroot-about|
+
+=============================================================================
+INTRODUCTION			*projectroot-intro*
+
+This plugin allows you to work with the concept of the root of a project. The
+roots of projects can be automatically guessed (based on folders such as
+`.git`) or manually set. You can use the built-in utility methods in
+combination with your project root or retrieve it and use it for your own
+purposes.
+
+=============================================================================
+EXAMPLES			*projectroot-examples*
+
+This plugin does not do much interesting out of the box! But you can use it
+for whatever you want. To give you an idea, here a couple of possible mappings
+and uses:
+
+-----------------------------------------------------------------------------
+Change current working directory~
+Manually using |ProjectRootCD|: >
+    :ProjectRootCD
+
+With a mapping: >
+    nnoremap <leader>dp :ProjectRootCD<cr>
+
+Automatically: >
+    au BufEnter * if &ft != 'help' | ProjectRootCD | endif
+
+-----------------------------------------------------------------------------
+Edit a file relative to the project root~
+By changing current directory: >
+    nnoremap <leader>ep :ProjectRootCD<cr>:e<space>
+
+Without changing the current directory: >
+    nnoremap <expr> <leader>ep ':e '.ProjectRootGuess().'/'
+
+-----------------------------------------------------------------------------
+Buffer management~
+If you use Vim to manage a ton of buffers, it is sometimes difficult to find
+that other buffer in your project your working on. Not anymore. Check out
+what commands such as |ProjectBufNext| can do: >
+
+    nnoremap <silent> [p :ProjectBufPrev<cr>
+    nnoremap <silent> ]p :ProjectBufNext<cr>
+    nnoremap <silent> [P :ProjectBufFirst<cr>
+    nnoremap <silent> ]P :ProjectBufLast<cr>
+
+To manage multiple projects, you could use something like: >
+    nnoremap <silent> ]v :ProjectBufNext ~/.vim<cr>
+    nnoremap <silent> [v :ProjectBufPrev ~/.vim<cr>
+
+Or if you had used `mF` to mark a file in a certain project: >
+    nnoremap <silent> ]f :ProjectBufNext 'F<cr>
+    nnoremap <silent> [f :ProjectBufPrev 'F<cr>
+
+As you can see in the last example, instead of using a filename for [file] you
+can actually also use a file mark!
+
+-----------------------------------------------------------------------------
+Grep/Ack~
+To grep with your project as base directory: >
+    nnoremap <Leader>g :ProjectRootExe grep<space>
+
+-----------------------------------------------------------------------------
+CtrlP~
+CtrlP uses its own project root detection, but you can add mappings to make it
+use the project root detection this plugin provides instead: >
+    nnoremap <silent> <leader>ef :exe 'CtrlP' ProjectRootGuess("'F")<cr>
+    nnoremap <silent> <leader>ep :exe 'CtrlP' ProjectRootGuess()<cr>
+
+-----------------------------------------------------------------------------
+NERDTree~
+Toggling open NERDTree can be made that much more awesome: >
+    nnoremap <silent> <F9> :ProjectRootExe NERDTreeFind<cr>
+
+=============================================================================
+COMMANDS			*projectroot-commands*
+
+				*projectroot-:ProjectRootCD*
+:ProjectRootCD [file]		Changes the directory to the project root of
+				the given file (current file if none is
+				given)
+
+				*projectroot-:ProjectRootExe*
+:ProjectRootExe {cmd}		Executes the given command with the current
+				directory set to the project root of the
+				given file. The current directory is restored
+				after executing this command.
+
+				*projectroot-:ProjectBufNext*
+:ProjectBufNext[!] [file]	Switch to the next project buffer. The `!`
+				can be provided and has the same effect as
+				the `:bnext!` command.
+
+Note: By default, if the next buffer would already be visible in another
+window, it is skipped. For disabling this, see |'g:projectroot_noskipbufs'|.
+
+				*projectroot-:ProjectBufPrev*
+:ProjectBufPrev[!] [file]	Switch to the previous project buffer.
+
+				*projectroot-:ProjectBufFirst*
+:ProjectBufFirst[!] [file]	Switch to the first project buffer.
+
+				*projectroot-:ProjectBufLast*
+:ProjectBufLast[!] [file]	Switch to the last project buffer.
+
+				*projectroot-:ProjectBufArgs*
+:ProjectBufArgs [file]		Set the `arglist` equal to a list of the
+				project buffers. This might be useful to
+				combine with built-in commands that do
+				something with the argument list such as
+				`argadd`, `next` and `argdo`.
+
+				For a full list check out |argument-list|.
+
+				*projectroot-:ProjectBufDo*
+:ProjectBufDo[!] {cmd}		Similar to `bufdo`, but execute the given
+				command on each project buffer. Similar to
+				`:ProjectBufFirst:{cmd}:ProjectBufNext:{cmd}`
+				etcetera.
+
+=============================================================================
+METHODS				*projectroot-methods*
+
+You could use the following methods in your own Vimscripts:
+
+				*projectroot-ProjectRootGuess*
+ProjectRootGuess([file])	Returns the project root for the given file
+				(or for the current file if none is given).
+
+				If the file exists a path will always be
+				returned, and it will always be absolute.
+
+				*projectroot-ProjectRootExe*
+ProjectRootExe(cmd)		Temporarily changes the current directory to
+				that of the project root, then executes the
+				command.
+
+				*projectroot-ProjectRootCD*
+ProjectRootCD([file])		Changes the current directory to project
+				root of the given file.
+
+				*projectroot-ProjectRootBuffers*
+ProjectRootBuffers([file])	Returns all buffers belonging to the same
+				project of the given file.
+
+				*projectroot-ProjectBufNext*
+ProjectBufNext(count, [file])	Return the filename of the next project
+				buffer. The `count` parameter specifies how
+				many entries to go up or down the project
+				buffer list, wrapping around at the start or
+				end.
+
+=============================================================================
+CUSTOMIZING			*projectroot-customizing*
+
+				*'g:rootmarkers'*
+Default: ['.projectroot','.git','.hg','.svn','.bzr','_darcs','build.xml']
+From the given file, the presence of these markers is checked in-order in
+order to detect the projectroot. This means that `.projectroot` has the
+highest priority, `.git` second highest and so on. >
+    let g:rootmarkers = ['.svn', '.git']
+<
+
+				*'b:projectroot'*
+Default: None
+This variable can be used to set a custom project root for the current buffer.
+If this folder exists and is a valid parent of the given file, it will be
+used as the project root. >
+    let b:projectroot = '~/foo/bar'
+<
+
+				*'g:projectroot_noskipbufs'*
+Default: 0
+The default behavior of ProjectBufNext and ProjectBufPrev is to skip buffers
+that are already visible in the current tabpage. This is generally the right
+thing to do because, well, who needs 2 windows of the same thing?
+If you prefer not to have this behavior use: >
+
+    let g:projectroot_noskipbufs = 1
+
+=============================================================================
+EXTENDING			*projectroot-extending*
+
+If you're a plugin author feel free to use the functionality this plugin
+provides in your own plugin. To make sure your plugin is not totally dependent
+on this one also being installed, feel free to copy code from this plugin and
+perhaps wrapping it like this: >
+
+    if !exists('*ProjectRootGuess')
+	fun! ProjectRootGuess()
+	     ...
+	endf
+    endif
+
+=============================================================================
+ABOUT				*projectroot-about*
+
+If you find any bugs, have questions, suggestions or comments check out:
+
+    https://github.com/dbakker/vim-projectroot
+
+Happy vimming!
+
+ vim:tw=78:ts=8:ft=help:norl:noet:
