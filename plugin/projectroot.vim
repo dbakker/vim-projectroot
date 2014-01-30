@@ -39,7 +39,7 @@ endf
 
 " ProjectRootCD([file]): changes directory to the project of the given file {{{1
 fun! ProjectRootCD(...)
-  exe 'cd' ProjectRootGuess(s:getfullname(a:0 ? a:1 : ''))
+  exe 'cd' '"' . ProjectRootGuess(s:getfullname(a:0 ? a:1 : '')) . '"'
 endf
 
 command! -nargs=? -complete=file ProjectRootCD :call ProjectRootCD("<args>")
@@ -51,7 +51,7 @@ fun! ProjectRootExe(args)
     ProjectRootCD
     exe join(a:args)
   finally
-    exe 'cd' olddir
+    exe 'cd' '"' . olddir . '"'
   endtry
 endfun
 
