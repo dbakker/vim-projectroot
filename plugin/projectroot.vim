@@ -15,6 +15,9 @@ endif
 
 " ProjectRootGuess([file]): guesses and returns the project root {{{1
 fun! ProjectRootGuess(...)
+  if exists('s:projectrootskip')
+    return s:projectrootskip
+  endif
   let fullfile = s:getfullname(a:0 ? a:1 : '')
   if exists('b:projectroot')
     if stridx(fullfile, fnamemodify(b:projectroot, ':p'))==0
@@ -132,3 +135,12 @@ fun! s:getmarkfile(mark)
     return ''
   endtry
 endf
+
+" ProjectRootSkip(cmd): executes cmd from within the file directory {{{1
+fun! ProjectRootSkip(args)
+  let s:projectrootskip = expand("%:p:h")
+  call ProjectRootExe(a:args)
+  unlet s:projectrootskip 
+endfun
+
+command! -nargs=* -complete=command ProjectRootSkip :call ProjectRootSkip([<f-args>])
