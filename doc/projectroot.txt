@@ -135,6 +135,14 @@ window, it is skipped. For disabling this, see |'g:projectroot_noskipbufs'|.
 				`:ProjectBufFirst:{cmd}:ProjectBufNext:{cmd}`
 				etcetera.
 
+				*projectroot-:ProjectRootSkip*
+:ProjectRootSkip {cmd}		Executes the given command with the current
+				directory set to the current file. The current
+				directory is restored after executing this
+				command. Useful to perform a command skipping
+				the execution of `ProjectRootCD` in an autocmd: >
+				autocmd QuickFixCmdPre make,grep ProjectRootCD
+<
 =============================================================================
 METHODS				*projectroot-methods*
 
