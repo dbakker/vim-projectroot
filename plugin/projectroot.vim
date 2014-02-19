@@ -13,8 +13,8 @@ if !exists('g:rootmarkers')
   let g:rootmarkers = ['.projectroot', '.git', '.hg', '.svn', '.bzr', '_darcs', 'build.xml']
 endif
 
-" ProjectRootGuess([file]): guesses and returns the project root {{{1
-fun! ProjectRootGuess(...)
+" ProjectRootGet([file]): get the project root (if any) {{{1
+fun! ProjectRootGet(...)
   let fullfile = s:getfullname(a:0 ? a:1 : '')
   if exists('b:projectroot')
     if stridx(fullfile, fnamemodify(b:projectroot, ':p'))==0
@@ -34,6 +34,17 @@ fun! ProjectRootGuess(...)
       return result
     endif
   endfor
+  return ''
+endf
+
+" ProjectRootGuess([file]): guesses and returns the project root {{{1
+fun! ProjectRootGuess(...)
+  let projroot = ProjectRootGet(a:0 ? a:1 : '')
+  if len(projroot)
+    return projroot
+  endif
+  " Not found: return parent directory of current file / file itself.
+  let fullfile = s:getfullname(a:0 ? a:1 : '')
   return filereadable(fullfile) ? fnamemodify(fullfile, ':h') : fullfile
 endf
 
