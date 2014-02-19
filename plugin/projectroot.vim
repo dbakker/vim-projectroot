@@ -29,7 +29,7 @@ fun! ProjectRootGet(...)
     while 1
       let prev=pivot
       let pivot=fnamemodify(pivot, ':h')
-      if len(glob(pivot.'/'.marker))
+      if filereadable(pivot.'/'.marker) || isdirectory(pivot.'/'.marker)
         return pivot
       endif
       if pivot==prev
