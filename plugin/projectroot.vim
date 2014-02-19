@@ -16,6 +16,9 @@ endif
 " ProjectRootGet([file]): get the project root (if any) {{{1
 fun! ProjectRootGet(...)
   let fullfile = s:getfullname(a:0 ? a:1 : '')
+  if fullfile =~ '^fugitive:/'
+    return '' " skip any fugitive buffers early
+  endif
   if exists('b:projectroot')
     if stridx(fullfile, fnamemodify(b:projectroot, ':p'))==0
       return b:projectroot
