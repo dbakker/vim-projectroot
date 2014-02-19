@@ -67,10 +67,10 @@ command! -nargs=? -complete=file ProjectRootLCD :call ProjectRootCD("<args>", "l
 fun! ProjectRootExe(args)
   let olddir = getcwd()
   try
-    ProjectRootCD
+    ProjectRootLCD
     exe join(a:args)
   finally
-    exe 'cd' fnameescape(olddir)
+    exe 'lcd' fnameescape(olddir)
   endtry
 endfun
 
