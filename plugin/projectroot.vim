@@ -52,11 +52,16 @@ fun! ProjectRootGuess(...)
 endf
 
 " ProjectRootCD([file]): changes directory to the project of the given file {{{1
+" Args: 0: (optional) filename
+"       1: (optional) command (Default: "cd")
 fun! ProjectRootCD(...)
-  exe 'cd' fnameescape(ProjectRootGuess(s:getfullname(a:0 ? a:1 : '')))
+  let root = ProjectRootGuess(get(a:000, 0, ''))
+  let cdcmd = get(a:000, 1, 'cd')
+  exe cdcmd fnameescape(root)
 endf
 
-command! -nargs=? -complete=file ProjectRootCD :call ProjectRootCD("<args>")
+command! -nargs=? -complete=file ProjectRootCD  :call ProjectRootCD("<args>", "cd")
+command! -nargs=? -complete=file ProjectRootLCD :call ProjectRootCD("<args>", "lcd")
 
 " ProjectRootExe(cmd): executes cmd from within the project directory {{{1
 fun! ProjectRootExe(args)
