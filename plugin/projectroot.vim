@@ -25,17 +25,17 @@ fun! ProjectRootGet(...)
     endif
   endif
   for marker in g:rootmarkers
-    let result=''
     let pivot=fullfile
-    while pivot!=fnamemodify(pivot, ':h')
+    while 1
+      let prev=pivot
       let pivot=fnamemodify(pivot, ':h')
       if len(glob(pivot.'/'.marker))
-        let result=pivot
+        return pivot
+      endif
+      if pivot==prev
+        break
       endif
     endwhile
-    if len(result)
-      return result
-    endif
   endfor
   return ''
 endf
