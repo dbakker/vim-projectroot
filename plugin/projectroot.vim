@@ -66,11 +66,16 @@ command! -nargs=? -complete=file ProjectRootLCD :call ProjectRootCD("<args>", "l
 " ProjectRootExe(cmd): executes cmd from within the project directory {{{1
 fun! ProjectRootExe(args)
   let olddir = getcwd()
+  let haslocaldir = haslocaldir()
   try
     ProjectRootLCD
     exe join(a:args)
   finally
-    exe 'lcd' fnameescape(olddir)
+    " Restore working directory.
+    " If there was a local directory already, restore it. Otherwise use `cd`
+    " to make the current window lose its local dir (from our `lcd`).
+    " (see ':h current-directory').
+    exe (haslocaldir ? 'lcd' : 'cd') fnameescape(olddir)
   endtry
 endfun
 
