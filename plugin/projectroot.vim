@@ -48,7 +48,7 @@ fun! ProjectRootGuess(...)
   endif
   " Not found: return parent directory of current file / file itself.
   let fullfile = s:getfullname(a:0 ? a:1 : '')
-  return filereadable(fullfile) ? fnamemodify(fullfile, ':h') : fullfile
+  return !isdirectory(fullfile) ? fnamemodify(fullfile, ':h') : fullfile
 endf
 
 " ProjectRootCD([file]): changes directory to the project of the given file {{{1
