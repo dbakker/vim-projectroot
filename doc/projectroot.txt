@@ -140,12 +140,20 @@ METHODS				*projectroot-methods*
 
 You could use the following methods in your own Vimscripts:
 
+				*projectroot-ProjectRootGet*
+ProjectRootGet([file])		Returns the project root for the given file
+				(or for the current file if none is given).
+
+				If the root exists, it is returned. If it does
+				not exist, a blank string is returned.
+
 				*projectroot-ProjectRootGuess*
 ProjectRootGuess([file])	Returns the project root for the given file
 				(or for the current file if none is given).
 
-				If the file exists a path will always be
-				returned, and it will always be absolute.
+				If the root exists, it is returned. If it does
+				not exist, the parent directory of the file is
+				returned.
 
 				*projectroot-ProjectRootExe*
 ProjectRootExe(cmd)		Temporarily changes the current directory to
