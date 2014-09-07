@@ -40,7 +40,10 @@ With a mapping: >
     nnoremap <leader>dp :ProjectRootCD<cr>
 
 Automatically: >
-    au BufEnter * if &ft != 'help' | ProjectRootCD | endif
+    autocmd BufEnter * ProjectRootCD
+
+Automatically (advanced version): >
+    autocmd BufEnter * if &ft != 'help' | call ProjectRootCD() | endif
 
 -----------------------------------------------------------------------------
 Edit a file relative to the project root~

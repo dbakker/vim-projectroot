@@ -36,9 +36,13 @@ Using a mapping:
 
     nnoremap <leader>dp :ProjectRootCD<cr>
 
-Automatically:
+Automatically whenever you open a buffer:
 
-    au BufEnter * if &ft != 'help' | call ProjectRootCD() | endif
+    autocmd BufEnter * ProjectRootCD
+
+Automatically (advanced version):
+
+    autocmd BufEnter * if &ft != 'help' | call ProjectRootCD() | endif
 
 ### Grep
 To grep with your project as base directory, you could add something like:
