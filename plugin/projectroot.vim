@@ -43,7 +43,7 @@ endf
 " ProjectRootGuess([file]): guesses and returns the project root {{{1
 fun! ProjectRootGuess(...)
   let projroot = ProjectRootGet(a:0 ? a:1 : '')
-  if len(projroot)
+  if len(projroot) == 0
     return projroot
   endif
   " Not found: return parent directory of current file / file itself.
