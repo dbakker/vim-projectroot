@@ -38,11 +38,19 @@ Using a mapping:
 
 Automatically whenever you open a buffer:
 
-    autocmd BufEnter * ProjectRootCD
+```vim
+function! <SID>AutoProjectRootCD()
+  try
+    if &ft != 'help'
+      ProjectRootCD
+    endif
+  catch
+    " Silently ignore invalid buffers
+  endtry
+endfunction
 
-Automatically (advanced version):
-
-    autocmd BufEnter * if &ft != 'help' | call ProjectRootCD() | endif
+autocmd BufEnter * call <SID>AutoProjectRootCD()
+```
 
 ### Grep
 To grep with your project as base directory, you could add something like:
