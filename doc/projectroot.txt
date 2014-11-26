@@ -59,7 +59,7 @@ By changing current directory: >
     nnoremap <leader>ep :ProjectRootCD<cr>:e<space>
 
 Without changing the current directory: >
-    nnoremap <expr> <leader>ep ':e '.ProjectRootGuess().'/'
+    nnoremap <expr> <leader>ep ':e '.projectroot#guess().'/'
 
 -----------------------------------------------------------------------------
 Buffer management~
@@ -92,8 +92,8 @@ To grep with your project as base directory: >
 CtrlP~
 CtrlP uses its own project root detection, but you can add mappings to make it
 use the project root detection this plugin provides instead: >
-    nnoremap <silent> <leader>ef :exe 'CtrlP' ProjectRootGuess("'F")<cr>
-    nnoremap <silent> <leader>ep :exe 'CtrlP' ProjectRootGuess()<cr>
+    nnoremap <silent> <leader>ef :exe 'CtrlP' projectroot#guess("'F")<cr>
+    nnoremap <silent> <leader>ep :exe 'CtrlP' projectroot#guess()<cr>
 
 -----------------------------------------------------------------------------
 NERDTree~
@@ -117,7 +117,7 @@ COMMANDS			*projectroot-commands*
 				*projectroot-:ProjectBufNext*
 :ProjectBufNext[!] [file]	Switch to the next project buffer. The `!`
 				can be provided and has the same effect as
-				the `:bnext!` command.
+				in the `:bnext!` command.
 
 Note: By default, if the next buffer would already be visible in another
 window, it is skipped. For disabling this, see |'g:projectroot_noskipbufs'|.
@@ -151,36 +151,36 @@ METHODS				*projectroot-methods*
 
 You could use the following methods in your own Vimscripts:
 
-				*projectroot-ProjectRootGet*
-ProjectRootGet([file])		Returns the project root for the given file
+				*projectroot-projectroot#get*
+projectroot#get([file])		Returns the project root for the given file
 				(or for the current file if none is given).
 
 				If the root exists, it is returned. If it does
 				not exist, a blank string is returned.
 
-				*projectroot-ProjectRootGuess*
-ProjectRootGuess([file])	Returns the project root for the given file
+				*projectroot-projectroot#guess*
+projectroot#guess([file])	Returns the project root for the given file
 				(or for the current file if none is given).
 
 				If the root exists, it is returned. If it does
 				not exist, the parent directory of the file is
 				returned.
 
-				*projectroot-ProjectRootExe*
-ProjectRootExe(cmd)		Temporarily changes the current directory to
+				*projectroot-projectroot#exe*
+projectroot#exe(cmd)		Temporarily changes the current directory to
 				that of the project root, then executes the
 				command.
 
-				*projectroot-ProjectRootCD*
-ProjectRootCD([file])		Changes the current directory to project
+				*projectroot-projectroot#cd*
+projectroot#cd([file])		Changes the current directory to project
 				root of the given file.
 
-				*projectroot-ProjectRootBuffers*
-ProjectRootBuffers([file])	Returns all buffers belonging to the same
+				*projectroot-projectroot#buffers*
+projectroot#buffers([file])	Returns all buffers belonging to the same
 				project of the given file.
 
-				*projectroot-ProjectBufNext*
-ProjectBufNext(count, [file])	Return the filename of the next project
+				*projectroot-projectroot#bufnext*
+projectroot#bufnext(count, [file])	Return the filename of the next project
 				buffer. The `count` parameter specifies how
 				many entries to go up or down the project
 				buffer list, wrapping around at the start or
@@ -222,8 +222,8 @@ provides in your own plugin. To make sure your plugin is not totally dependent
 on this one also being installed, feel free to copy code from this plugin and
 perhaps wrapping it like this: >
 
-    if !exists('*ProjectRootGuess')
-	fun! ProjectRootGuess()
+    if !exists('*projectroot#guess')
+	function! projectroot#guess()
 	     ...
 	endf
     endif
