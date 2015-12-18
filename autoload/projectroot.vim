@@ -11,13 +11,16 @@ endif
 " projectroot#get([file]): get the project root (if any) {{{1
 function! projectroot#get(...)
   let fullfile = s:getfullname(a:0 ? a:1 : '')
-  if fullfile =~ '^fugitive:/'
-    return '' " skip any fugitive buffers early
-  endif
   if exists('b:projectroot')
     if stridx(fullfile, fnamemodify(b:projectroot, ':p'))==0
       return b:projectroot
     endif
+  endif
+  if fullfile =~ '^fugitive:/'
+    if exists('b:git_dir')
+      return fnamemodify(b:git_dir, ':h')
+    endif
+    return '' " skip any fugitive buffers early
   endif
   for marker in g:rootmarkers
     let pivot=fullfile
