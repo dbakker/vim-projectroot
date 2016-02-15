@@ -98,3 +98,9 @@ Similar projects
     project or folder specific scripts.
   * [CtrlP](https://github.com/kien/ctrlp.vim): Has an option to search
     for files relative to the root directory of your project.
+
+License
+-------
+
+Copyright (c) Daan O. Bakker.  Distributed under the same terms as Vim itself.
+See `:help license`.
