@@ -27,7 +27,8 @@ function! projectroot#get(...)
     while 1
       let prev=pivot
       let pivot=fnamemodify(pivot, ':h')
-      if filereadable(pivot.'/'.marker) || isdirectory(pivot.'/'.marker)
+      let fn = pivot.(pivot == '/' ? '' : '/').marker
+      if filereadable(fn) || isdirectory(fn)
         return pivot
       endif
       if pivot==prev
