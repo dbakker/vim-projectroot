@@ -7,6 +7,9 @@ let autoloaded_projectroot = 1
 if !exists('g:rootmarkers')
   let g:rootmarkers = ['.projectroot', '.git', '.hg', '.svn', '.bzr', '_darcs', 'build.xml']
 endif
+if !exists('g:projectroot_nested_git_submodule')
+  let g:projectroot_nested_git_submodule = 0
+endif
 
 " projectroot#get([file]): get the project root (if any) {{{1
 function! projectroot#get(...)
@@ -28,7 +31,19 @@ function! projectroot#get(...)
       let prev=pivot
       let pivot=fnamemodify(pivot, ':h')
       let fn = pivot.(pivot == '/' ? '' : '/').marker
-      if filereadable(fn) || isdirectory(fn)
+
+      if marker == '.git'
+        let result=s:examinedotgit(fn)
+        if result == 3
+          " if the .git file indicates this git repo is actually a submodule
+          " contained inside a parent repo, then keep recursing up the
+          " directory structure
+          continue
+        elseif result > 0
+          " if .git is a file or directory, it is our project root marker
+          return pivot
+        endif
+      elseif filereadable(fn) || isdirectory(fn)
         return pivot
       endif
       if pivot==prev
@@ -136,3 +151,38 @@ function! s:getmarkfile(mark)
     return ''
   endtry
 endfunction
+
+function! s:examinedotgit(fn)
+  " returns one of:
+  " 0: The .git file at a:fn doesn't exist.
+  " 1: The .git file at a:fn is a directory.
+  " 2: The .git file at a:fn is a regular file.
+  " 3: The .git file at a:fn is a nested git submodule (Only when
+  "    g:projectroot_nested_git_submodule is set).
+  if isdirectory(a:fn)
+    return 1  " a directory
+  endif
+
+  if g:projectroot_nested_git_submodule && exists('*readfile')
+    " check to see if we're in a .git submodule
+    try
+      let lines=readfile(a:fn, 0, 1)
+    catch /E484/
+      return 0  " doesn't exist
+    endtry
+    if len(lines) && lines[0] =~ '^gitdir: \%(\.\./\)\+\.git/modules/'
+      return 3  " the .git is a nested git submodule
+    endif
+
+    return 2  " the .git is some other type of .git file (probably a worktree)
+  endif
+
+  " g:projectroot_nested_git_submodule wasn't set - just check to see if the
+  " .git entry is a plain file
+  if filereadable(a:fn)
+    return 2  " the .git is some other type of .git file (probably a worktree)
+  endif
+
+  return  0  " doesn't exist
+endfun
+
