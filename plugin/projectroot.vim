@@ -12,6 +12,7 @@ let loaded_projectroot = 1
 command! -nargs=* -complete=command ProjectRootExe :call projectroot#exe([<f-args>])
 command! -nargs=? -complete=file ProjectRootCD :call projectroot#cd("<args>", "cd")
 command! -nargs=? -complete=file ProjectRootLCD :call projectroot#cd("<args>", "lcd")
+command! -nargs=? -complete=file ProjectRootTCD :call projectroot#cd("<args>", "tcd")
 
 command! -nargs=? -complete=file ProjectBufArgs :exe 'args' join(projectroot#buffers("<args>"))
 command! -nargs=? -bang -complete=file ProjectBufFirst :exe 'b<bang>' projectroot#buffers("<args>")[0]
