@@ -205,6 +205,21 @@ used as the project root. >
     let b:projectroot = '~/foo/bar'
 <
 
+				*'g:projectroot_nested_git_submodule'*
+Default: 0
+If you are nesting git repos inside other git repos using git's submodule
+feature, then you might actually want the parent repo to be the project root
+not just for itself but also for nested repos. In this case, you can use: >
+
+    let g:projectroot_nested_git_submodule = 1
+<
+This setting will cause projectroot to read the contents of '.git' marker
+files and check if they are indicate a git submodule inside another git repo.
+If this is the case, then projectroot will continue searching up the tree for
+another '.git' marker file. (This option only works when `g:rootmarkers`
+contains '.git'.)
+
+
 				*'g:projectroot_noskipbufs'*
 Default: 0
 The default behavior of ProjectBufNext and ProjectBufPrev is to skip buffers
@@ -213,6 +228,7 @@ thing to do because, well, who needs 2 windows of the same thing?
 If you prefer not to have this behavior use: >
 
     let g:projectroot_noskipbufs = 1
+<
 
 =============================================================================
 EXTENDING			*projectroot-extending*
